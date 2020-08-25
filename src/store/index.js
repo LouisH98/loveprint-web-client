@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    lovePrintAddress: 'https://loveprint.louisholdsworth.co.uk:2053'
+    lovePrintAddress: 'https://lp-api.louisholdsworth.co.uk:2053'
   },
   mutations: {
   },
