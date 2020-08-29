@@ -1,21 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import SendMessage from "@/views/SendMessage";
+import Dashboard from "@/views/Dashboard";
 Vue.use(VueRouter)
 
   const routes = [
   {
     path: '/',
     name: 'Home',
-    component: SendMessage
+    component: Dashboard
   },
   {
-    path: '/about',
-    name: 'About',
+    path: '/history',
+    name: 'History',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/History.vue')
   }
 ]
 

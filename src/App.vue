@@ -1,42 +1,53 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="secondary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="@/assets/loveprint-logo-white.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-toolbar-title class="ms-1">LovePrint</v-toolbar-title>
-      </div>
-
-      <v-spacer></v-spacer>
-    </v-app-bar>
+  <v-app style="max-height: 100vh">
+    <AppBar/>
 
     <v-main>
-      <router-view style="overflow: auto; height: 100%"></router-view>
+      <transition name="fade">
+        <router-view/>
+      </transition>
     </v-main>
+
+    <v-bottom-navigation
+        color="primary"
+        app
+        grow
+        height="70px"
+        shift
+        class="pb-10"
+    >
+      <v-btn to="/">
+        <span>Dashboard</span>
+
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
+
+      <v-btn to="History">
+        <span>History</span>
+
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Nearby</span>
+
+        <v-icon>mdi-image</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-app>
 </template>
 
 <script>
 
+import AppBar from "@/components/AppBar";
 export default {
   name: 'App',
 
-  components: {},
+  components: {AppBar},
 
   data: () => ({
     //
-  }),
+  })
 };
 </script>
 
@@ -47,4 +58,25 @@ export default {
 * {
   font-family: 'Montserrat', sans-serif;
 }
+
+body, html {
+  background-color: #151515;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+  transition-property: opacity;
+  transition-duration: .25s;
+}
+
+.fade-enter-active {
+  transition-delay: .25s;
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
 </style>
