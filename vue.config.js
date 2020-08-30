@@ -7,6 +7,9 @@ module.exports = {
 
   pwa: {
     name: 'LovePrint',
-    themeColor: '#FF0000'
+    themeColor: '#FF0000',
+    workboxOptions: {
+      skipWaiting: true
+    }
   }
 }
