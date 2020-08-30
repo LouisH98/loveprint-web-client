@@ -12,22 +12,21 @@
         color="primary"
         app
         grow
-        height="70px"
         shift
     >
-      <v-btn to="/">
+      <v-btn to="/" height="100%">
         <span>Dashboard</span>
 
         <v-icon>mdi-home</v-icon>
       </v-btn>
 
-      <v-btn to="History">
+      <v-btn to="History" height="100%">
         <span>History</span>
 
         <v-icon>mdi-history</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn height="100%">
         <span>Nearby</span>
 
         <v-icon>mdi-image</v-icon>
