@@ -14,7 +14,6 @@
         grow
         height="70px"
         shift
-        class="pb-10"
     >
       <v-btn to="/">
         <span>Dashboard</span>
