@@ -1,28 +1,34 @@
 <template>
   <v-container fluid class="text-center" style="max-width: 700px">
-    <v-row justify="center" align="center">
+    <v-row id="wrapper" justify="center" align="center">
       <v-col cols="12" class="mb-0 pb-0">
         <v-textarea
             height="130px"
             v-model="message"
-            solo
             no-resize
-            outlined
+            class="elevation-7 rounded-lg"
+            solo
+            background-color="accent"
             hide-details
             placeholder="Message to print..."
         />
-        <TextFormattingControls v-on:formatting-changed="setFormatting"/>
 
       </v-col>
+      <v-col>
+        <TextFormattingControls v-on:formatting-changed="setFormatting"/>
+      </v-col>
+
       <v-col cols="12">
         <v-btn
             x-large
             :loading="sending"
-            outlined
             color="primary"
+            elevation="7"
             @click="sendMessageToServer"
             block
+            outlined
             class="mt-0 pt-0"
+            rounded
         >
           Print
         </v-btn>
@@ -33,6 +39,7 @@
 
 <script>
 import TextFormattingControls from "@/components/TextFormattingControls";
+
 const axios = require('axios');
 
 export default {
@@ -51,10 +58,10 @@ export default {
     }
   },
   methods: {
-    sendMessageToServer: async function() {
-      if(this.message.trim().length === 0) return
+    sendMessageToServer: async function () {
+      if (this.message.trim().length === 0) return
 
-      try{
+      try {
         this.sending = true
         console.log("Sending request to: ", this.$store.state.lovePrintAddress + '/api/print-text')
         console.log("Formatting", this.formatting)
@@ -63,24 +70,22 @@ export default {
           formatting: this.formatting
         });
 
-        if('paper' in response.data){
+        if ('paper' in response.data) {
           this.$store.commit('setHasPaper', response.data['paper'])
         }
 
         this.message = "";
-      }
-      catch (e) {
-        if('paper' in e.response.data){
+      } catch (e) {
+        if ('paper' in e.response.data) {
           this.$store.commit('setHasPaper', e.response.data['paper'])
         }
 
         alert(e.response.data.error)
-      }
-      finally {
+      } finally {
         this.sending = false;
       }
     },
-    setFormatting(formattingObject){
+    setFormatting(formattingObject) {
       this.formatting = formattingObject
     }
   }

@@ -1,21 +1,23 @@
 <template>
-  <v-app style="max-height: 100vh">
+  <v-app>
     <AppBar/>
     <SignInComponent/>
-    <v-main>
+    <v-main style="max-height: 50vh">
       <transition name="fade">
         <router-view/>
       </transition>
     </v-main>
 
-    <v-bottom-navigation
+    <v-bottom-navigation v-if="$vuetify.breakpoint.mobile"
         color="primary"
         app
         grow
         shift
+        class="pb-8"
+        style="height: 90px"
     >
       <v-btn to="/" height="100%">
-        <span>Dashboard</span>
+        <span >Dashboard</span>
 
         <v-icon>mdi-home</v-icon>
       </v-btn>
@@ -26,10 +28,10 @@
         <v-icon>mdi-history</v-icon>
       </v-btn>
 
-      <v-btn height="100%">
-        <span>Nearby</span>
+      <v-btn to="Settings" height="100%">
+        <span>Settings</span>
 
-        <v-icon>mdi-image</v-icon>
+        <v-icon>mdi-cog</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
@@ -59,9 +61,7 @@ export default {
 }
 
 body, html {
-  background-color: #151515;
-  overflow: hidden;
-  -webkit-overflow-scrolling: touch;
+  background-color: #272727;
 }
 
 

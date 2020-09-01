@@ -1,12 +1,12 @@
 <template>
   <div class="text-center">
-    <h1>History</h1>
+    <h1>Settings</h1>
   </div>
 </template>
 
 <script>
 export default {
-name: "History"
+name: "Settings"
 }
 </script>
 

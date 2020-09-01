@@ -3,18 +3,27 @@ import Vuetify from 'vuetify/lib';
 
 Vue.use(Vuetify);
 
-export default new Vuetify({
+const isDark = window.matchMedia('(prefers-color-scheme: dark)');
+isDark.addEventListener('change', (e) => {
+    vuetify.framework.theme.dark = e.matches
+})
+
+const vuetify = new Vuetify({
     theme: {
-        dark: true,
+        dark: isDark.matches,
         themes: {
             light: {
                 primary: "#eb4034",
-                secondary: '#575757'
+                secondary: '#575757',
+                accent: '#ffffff'
             },
             dark: {
                 primary: "#eb4034",
-                secondary: '#575757'
+                secondary: '#575757',
+                accent: '#303030'
+
             }
         }
     }
 });
+export default vuetify;

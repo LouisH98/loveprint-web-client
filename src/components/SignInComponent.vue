@@ -3,8 +3,10 @@
       persistent
       v-model="showModal"
       max-width="350"
+      content-class="rounded-xl"
   >
-    <v-card>
+    <v-card
+    >
       <v-card-title class="headline">
         Who are you?
       </v-card-title>
@@ -29,7 +31,11 @@
                 />
               </v-row>
               <v-row justify="center">
-                <v-btn color="primary" elevation="5">
+                <v-btn
+                    color="primary"
+                    elevation="5"
+                    @click="signIn"
+                >
                   Continue
                 </v-btn>
               </v-row>
@@ -45,13 +51,13 @@
 export default {
   name: "SignInComponent",
   data: () => ({
-    showModal: true,
+    showModal: false,
     formValid: false
   }),
   methods: {
     async signIn(){
       // do sign in - set up session
-
+      this.showModal = false;
     }
   }
 }

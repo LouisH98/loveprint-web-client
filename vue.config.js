@@ -8,6 +8,8 @@ module.exports = {
   pwa: {
     name: 'LovePrint',
     themeColor: '#FF0000',
+    appleMobileWebAppCapable:'yes',
+    assetsVersion: '0.1.0',
     workboxOptions: {
       skipWaiting: true
     }

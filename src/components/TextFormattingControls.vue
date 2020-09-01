@@ -1,12 +1,12 @@
 <template>
   <v-row
       justify="center"
-      class="ma-0 pa-0 mt-3"
+      class="ma-0 pa-0 mt-2"
   >
     <v-btn-toggle
         id="align-text"
         mandatory
-        class="ma-1"
+        class="ma-2 elevation-5 rounded-lg"
         v-model="formatting.justify"
     >
       <v-btn>
@@ -24,8 +24,7 @@
     <v-btn-toggle
         id="text-size3"
         mandatory
-        class="ma-1"
-
+        class="ma-2 elevation-5 rounded-lg"
         v-model="formatting.size"
     >
       <v-btn>
@@ -42,8 +41,8 @@
     <v-btn-toggle
         id="text-size"
         multiple
-
-        class="ma-1"
+        rounded
+        class="ma-2 elevation-5 rounded-lg"
         v-model="formatting.text_style"
     >
       <v-btn>
@@ -84,5 +83,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

@@ -1,14 +1,13 @@
 <template>
   <v-app-bar
       app
-      dark
   >
     <div class="d-flex align-center">
       <v-img
           alt="LovePrint logo"
           class="shrink mr-2"
           contain
-          src="@/assets/loveprint-logo-white.png"
+          :src="getLogo"
           transition="scale-transition"
           width="40"
       />
@@ -35,6 +34,7 @@
 
 <script>
 const axios = require('axios')
+
 export default {
   name: "AppBar",
   mounted() {
@@ -43,11 +43,14 @@ export default {
   computed: {
     isPaperEmpty() {
       return !this.$store.state.hasPaper
-    }
+    },
+    getLogo(){
+      return this.$vuetify.theme.dark ? require('@/assets/loveprint-logo-white.png') : require('@/assets/loveprint-logo.png')
+    },
   },
   data: () => ({
     connected: false,
-    connecting: true
+    connecting: true,
   }),
   methods: {
     async getPrinterStatus() {
