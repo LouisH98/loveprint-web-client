@@ -1,7 +1,7 @@
 <template>
   <v-app style="max-height: 100vh">
     <AppBar/>
-
+    <SignInComponent/>
     <v-main>
       <transition name="fade">
         <router-view/>
@@ -38,10 +38,11 @@
 <script>
 
 import AppBar from "@/components/AppBar";
+import SignInComponent from "@/components/SignInComponent";
 export default {
   name: 'App',
 
-  components: {AppBar},
+  components: {SignInComponent, AppBar},
 
   data: () => ({
     //
