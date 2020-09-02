@@ -61,6 +61,12 @@ export default {
     sendMessageToServer: async function () {
       if (this.message.trim().length === 0) return
 
+      if(this.message.split(" ").length > 25){
+        alert("Pls dont use all my paper...")
+        this.message = "pl"
+        return
+      }
+
       try {
         this.sending = true
         console.log("Sending request to: ", this.$store.state.lovePrintAddress + '/api/print-text')
