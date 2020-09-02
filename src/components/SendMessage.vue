@@ -63,7 +63,7 @@ export default {
 
       if(this.message.split(" ").length > 25){
         alert("Pls dont use all my paper...")
-        this.message = "pl"
+        this.message = "pls"
         return
       }
 
