@@ -4,13 +4,13 @@ import Vuetify from 'vuetify/lib';
 Vue.use(Vuetify);
 
 const isDark = window.matchMedia('(prefers-color-scheme: dark)');
-isDark.addEventListener('change', (e) => {
+isDark.addListener( (e) => {
     vuetify.framework.theme.dark = e.matches
 })
 
 const vuetify = new Vuetify({
     theme: {
-        dark: isDark.matches,
+        dark: true,
         themes: {
             light: {
                 primary: "#eb4034",
