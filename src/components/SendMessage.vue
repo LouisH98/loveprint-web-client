@@ -15,7 +15,7 @@
       </v-col>
 
       <v-col cols="12" class="mt-2">
-        <PaintPicture v-on:image-changed="setImage"/>
+        <PaintPicture ref="picture" v-on:image-changed="setImage"/>
       </v-col>
 
       <v-col class="pa-0 ma-0">
@@ -69,8 +69,14 @@ export default {
     setImage(image){
       this.image = image;
     },
+    isMessageContent(){
+      let isMessage = this.message.trim().length > 0;
+      let isImage = this.image.length > 0;
+
+      return (isMessage || isImage)
+    },
     sendMessageToServer: async function () {
-      if (this.message.trim().length === 0) return
+      if (!this.isMessageContent()) return
 
       if(this.message.split(" ").length > 25){
         alert("Pls dont use all my paper...")
@@ -94,6 +100,8 @@ export default {
         }
 
         this.message = "";
+        this.image = "";
+        this.$refs.picture.clearDrawing();
       } catch (e) {
         if ('paper' in e.response.data) {
           this.$store.commit('setHasPaper', e.response.data['paper'])
