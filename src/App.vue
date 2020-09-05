@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <AppBar/>
-    <SignInComponent/>
+    <AppBar v-on:change-username="showModal"/>
+    <SignInComponent ref="signin" />
     <v-main style="max-height: 50vh">
       <transition name="fade">
         <router-view/>
@@ -48,7 +48,13 @@ export default {
 
   data: () => ({
     //
-  })
+  }),
+
+  methods: {
+    showModal() {
+      this.$refs.signin.displayModal();
+    }
+  }
 };
 </script>
 

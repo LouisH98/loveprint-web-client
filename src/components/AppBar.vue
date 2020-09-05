@@ -16,6 +16,22 @@
     </div>
 
     <v-spacer></v-spacer>
+    <div>
+      <v-col cols="2">
+        <v-row>
+        <span style="font-size: 0.7em">
+          Name
+        </span>
+        </v-row>
+
+        <v-row>
+          <a @click="$emit('change-username')">
+            {{getUsername}}
+          </a>
+        </v-row>
+      </v-col>
+    </div>
+
 
     <div id="status-icons" class="d-flex">
       <div>
@@ -44,9 +60,12 @@ export default {
     isPaperEmpty() {
       return !this.$store.state.hasPaper
     },
-    getLogo(){
+    getLogo() {
       return this.$vuetify.theme.dark ? require('@/assets/loveprint-logo-white.png') : require('@/assets/loveprint-logo.png')
     },
+    getUsername() {
+      return this.$store.state.username;
+    }
   },
   data: () => ({
     connected: false,
@@ -54,22 +73,21 @@ export default {
   }),
   methods: {
     async getPrinterStatus() {
-       try {
-         const response = await axios.get(this.$store.state.lovePrintAddress + "/api/get-status")
-         this.connecting = false;
-         this.connected = true;
+      try {
+        const response = await axios.get(this.$store.state.lovePrintAddress + "/api/get-status")
+        this.connecting = false;
+        this.connected = true;
 
-         this.$store.commit('setHasPaper', response.data['paper'])
-       }
-       catch (e) {
-         console.log(e)
-         this.connecting = false;
-         this.connected = false;
+        this.$store.commit('setHasPaper', response.data['paper'])
+      } catch (e) {
+        console.log(e)
+        this.connecting = false;
+        this.connected = false;
 
-         setTimeout(() => {
-           this.getPrinterStatus();
-         }, 5000)
-       }
+        setTimeout(() => {
+          this.getPrinterStatus();
+        }, 5000)
+      }
     }
   }
 }

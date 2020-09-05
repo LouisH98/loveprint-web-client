@@ -73,7 +73,8 @@ export default {
         console.log("Formatting", this.formatting)
         const response = await axios.post(this.$store.state.lovePrintAddress + '/api/print-text', {
           message: this.message,
-          formatting: this.formatting
+          formatting: this.formatting,
+          username: this.$store.state.username
         });
 
         if ('paper' in response.data) {

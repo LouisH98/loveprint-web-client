@@ -19,11 +19,16 @@
                 <v-text-field
                     label="Name"
                     required
+                    counter
+                    :rules="[rules.counter]"
+                    v-model="usernameField"
+                    maxlength="10"
+                    @keypress.enter="setUsername"
                 >
 
                 </v-text-field>
               </v-row>
-              <v-row>
+              <v-row v-if="passwordNeeded">
                 <v-text-field
                     required
                     type="password"
@@ -34,7 +39,7 @@
                 <v-btn
                     color="primary"
                     elevation="5"
-                    @click="signIn"
+                    @click="setUsername"
                 >
                   Continue
                 </v-btn>
@@ -50,14 +55,29 @@
 <script>
 export default {
   name: "SignInComponent",
+  mounted() {
+    if(this.$store.state.username === ""){
+      this.showModal = true
+    }
+  },
   data: () => ({
     showModal: false,
-    formValid: false
+    formValid: false,
+    usernameField: "",
+    passwordNeeded: false,
+    rules: {
+      counter: value => value.length <= 10 || 'Max 10 characters',
+    }
   }),
   methods: {
-    async signIn(){
-      // do sign in - set up session
-      this.showModal = false;
+    displayModal(){
+      this.showModal = true
+    },
+    setUsername(){
+      if(this.usernameField.trim().length !== 0){
+        this.$store.commit('setUsername', this.usernameField);
+        this.showModal = false;
+      }
     }
   }
 }
