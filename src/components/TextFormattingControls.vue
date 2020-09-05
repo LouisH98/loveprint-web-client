@@ -1,7 +1,7 @@
 <template>
   <v-row
       justify="center"
-      class="ma-0 pa-0 mt-2"
+      class="ma-0 pa-0 mt-0"
   >
     <v-btn-toggle
         id="align-text"

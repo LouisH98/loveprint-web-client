@@ -12,11 +12,17 @@
             hide-details
             placeholder="Message to print..."
         />
-
       </v-col>
-      <v-col>
+
+      <v-col cols="12" class="mt-2">
+        <PaintPicture v-on:image-changed="setImage"/>
+      </v-col>
+
+      <v-col class="pa-0 ma-0">
         <TextFormattingControls v-on:formatting-changed="setFormatting"/>
       </v-col>
+
+
 
       <v-col cols="12">
         <v-btn
@@ -39,15 +45,17 @@
 
 <script>
 import TextFormattingControls from "@/components/TextFormattingControls";
+import PaintPicture from "@/components/PaintPicture";
 
 const axios = require('axios');
 
 export default {
 
   name: "MainScreen",
-  components: {TextFormattingControls},
+  components: {PaintPicture, TextFormattingControls},
   data: function () {
     return {
+      image: "",
       message: "",
       sending: false,
       formatting: {
@@ -58,6 +66,9 @@ export default {
     }
   },
   methods: {
+    setImage(image){
+      this.image = image;
+    },
     sendMessageToServer: async function () {
       if (this.message.trim().length === 0) return
 
@@ -74,7 +85,8 @@ export default {
         const response = await axios.post(this.$store.state.lovePrintAddress + '/api/print-text', {
           message: this.message,
           formatting: this.formatting,
-          username: this.$store.state.username
+          username: this.$store.state.username,
+          image: this.image
         });
 
         if ('paper' in response.data) {

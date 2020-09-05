@@ -1,12 +1,14 @@
 <template>
-  <SendMessage/>
+  <div>
+    <SendMessage/>
+  </div>
 </template>
 
 <script>
 import SendMessage from "@/components/SendMessage";
 
 export default {
-  components: {SendMessage},
+  components: { SendMessage},
   name: "Dashboard"
 }
 </script>
