@@ -87,7 +87,8 @@ export default {
       try {
         this.sending = true
         console.log("Sending request to: ", this.$store.state.lovePrintAddress + '/api/print-text')
-        console.log("Formatting", this.formatting)
+        console.log("Formatting", this.formatting);
+        console.log(this.image)
         const response = await axios.post(this.$store.state.lovePrintAddress + '/api/print-text', {
           message: this.message,
           formatting: this.formatting,

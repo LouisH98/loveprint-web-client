@@ -71,12 +71,14 @@ export default {
       this.canvas.freeDrawingBrush.width = 5;
     },
     saveCanvasToImage(){
-      this.showCanvas = false
       this.canvas.discardActiveObject();
+
       this.canvas.getObjects().forEach(object => {
-        object.stroke = 'black'
+        object.set('stroke', 'black')
       })
+      this.canvas.requestRenderAll();
       this.drawing = this.canvas.toDataURL('png')
+      this.showCanvas = false
 
       this.$emit('image-changed', this.drawing)
     },
