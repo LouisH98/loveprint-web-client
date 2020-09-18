@@ -10,7 +10,7 @@ isDark.addListener( (e) => {
 
 const vuetify = new Vuetify({
     theme: {
-        dark: true,
+        dark: isDark.matches,
         themes: {
             light: {
                 primary: "#eb4034",
