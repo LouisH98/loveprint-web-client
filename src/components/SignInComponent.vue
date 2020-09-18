@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-      persistent
+      :persistent="!this.$store.state.username"
       v-model="showModal"
       max-width="350"
       content-class="rounded-xl"
