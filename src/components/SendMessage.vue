@@ -2,7 +2,8 @@
   <v-container fluid class="text-center" style="max-width: 700px">
 
     <v-snackbar
-        v-model="snackbar"
+        id="success-snackbar"
+        v-model="successSnackbar"
         timeout="2000"
         color="success"
         top
@@ -13,12 +14,32 @@
         <v-btn
             text
             v-bind="attrs"
-            @click="snackbar = false"
+            @click="successSnackbar = false"
         >
           Close
         </v-btn>
       </template>
     </v-snackbar>
+
+    <v-snackbar
+        id="error-snackbar"
+        v-model="errorSnackbar"
+        color="error"
+        top
+    >
+      Error Printing! <br/> {{errorMessage}}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            text
+            v-bind="attrs"
+            @click="errorSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
     <v-row id="wrapper" justify="center" align="center">
       <v-col cols="12" class="mb-0 pb-0">
         <v-textarea
@@ -77,7 +98,9 @@ export default {
       image: "",
       message: "",
       sending: false,
-      snackbar: false,
+      successSnackbar: false,
+      errorSnackbar: false,
+      errorMessage: '',
       formatting: {
         justify: 1,
         size: 2,
@@ -121,7 +144,7 @@ export default {
           this.$store.commit('setHasPaper', response.data['paper'])
         }
 
-        this.snackbar = true;
+        this.successSnackbar = true;
 
 
         this.message = "";
@@ -132,7 +155,8 @@ export default {
           this.$store.commit('setHasPaper', e.response.data['paper'])
         }
 
-        alert(e.response.data.error)
+        this.errorMessage = e.response.data.error
+        this.errorSnackbar = true;
       } finally {
         this.sending = false;
       }

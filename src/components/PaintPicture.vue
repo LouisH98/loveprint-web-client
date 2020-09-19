@@ -26,13 +26,26 @@
         <v-row justify="center" align="center">
           <canvas id="canvas" width="384" height="384"/>
         </v-row>
+        <v-row justify="center" align="center" >
+          <v-slider
+              thumb-label
+              class="px-7"
+              dense
+              label="Pen Size"
+              min="1"
+              max="15"
+              v-model="penSize"
+
+          />
+        </v-row>
         <v-card-actions style="overflow: hidden" class="mx-2">
+
           <v-row justify="space-around" align="end">
             <v-btn outlined @click="clearCanvas">Clear</v-btn>
-            <v-btn icon>
+            <v-btn icon :disabled="!canUndo" @click="undo">
               <v-icon>mdi-undo</v-icon>
             </v-btn>
-            <v-btn icon>
+            <v-btn icon :disabled="!canRedo" @click="redo">
               <v-icon>mdi-redo</v-icon>
             </v-btn>
             <v-btn text @click="showCanvas = false">Cancel</v-btn>
@@ -56,11 +69,23 @@ export default {
     showCanvas: false,
     drawing: "",
     stateHistory: [],
-    currentStateIndex: 0
+    penSize: 5,
+    currentStateIndex: -1
   }),
+  watch: {
+    penSize(){
+      this.canvas.freeDrawingBrush.width = this.penSize;
+    }
+  },
   computed: {
-    isMobile(){
+    isMobile() {
       return this.$vuetify.breakpoint.mobile
+    },
+    canUndo() {
+      return this.currentStateIndex >= 0;
+    },
+    canRedo() {
+      return this.currentStateIndex < this.stateHistory.length - 1
     }
   },
   methods: {
@@ -74,8 +99,10 @@ export default {
       this.showCanvas = true;
     },
     clearCanvas() {
-      if(confirm("Are you sure you want to clear the canvas?")){
+      if (confirm("Are you sure you want to clear the canvas?")) {
         this.canvas.clear();
+        this.stateHistory = []
+        this.currentStateIndex = -1;
       }
     },
     createCanvas() {
@@ -84,7 +111,7 @@ export default {
       })
 
       canvas.freeDrawingBrush.color = this.$vuetify.theme.dark ? 'white' : 'black';
-      canvas.freeDrawingBrush.width = 5;
+      canvas.freeDrawingBrush.width = this.penSize;
 
       this.registerCanvasEvents(canvas)
 
@@ -92,18 +119,35 @@ export default {
     },
 
     registerCanvasEvents(canvas) {
-      canvas.on('object:added', () => {
+      canvas.on('path:created', () => {
         // save canvas state, increment current index number
         let canvasJSON = canvas.toJSON();
-        this.stateHistory.push(canvasJSON);
+
+        if(this.currentStateIndex !== this.stateHistory.length -1){
+          console.log("Slice")
+          this.stateHistory = this.stateHistory.slice(0, Math.max(this.currentStateIndex + 1, 0));
+        }
+
         this.currentStateIndex++;
+        // remove all future changes... (+1 because math.max is exclusive of the last element... nice)
+        this.stateHistory.push(canvasJSON);
+
+
       })
     },
 
     undo() {
-      if (this.currentStateIndex > 0) {
+      if(this.currentStateIndex === 0) {
+        this.canvas.clear();
+        this.currentStateIndex--;
+      }
+      else {
         this.canvas = this.canvas.loadFromJSON(this.stateHistory[--this.currentStateIndex])
       }
+    },
+
+    redo() {
+       this.canvas = this.canvas.loadFromJSON(this.stateHistory[++this.currentStateIndex])
     },
 
     saveCanvasToImage() {
