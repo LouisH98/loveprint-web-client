@@ -155,24 +155,29 @@ export default {
 
 
       if (this.canvas.getObjects().length === 0) {
-        this.drawing = ''
+        this.drawing = '';
       } else {
-        //clone canvas - to prevent black lines when going back to edit
-        let canvasJSON = this.canvas.toJSON();
-        let canvasCopy = this.createCanvas().loadFromJSON(canvasJSON)
 
-
-        canvasCopy.getObjects().forEach(object => {
+        this.canvas.getObjects().forEach(object => {
           object.set('stroke', 'black')
-        })
+        });
 
-        canvasCopy.requestRenderAll();
-        this.drawing = canvasCopy.toDataURL('png')
+        this.drawing = this.canvas.toDataURL('png');
+        this.resetPathStroke();
       }
+
 
       this.showCanvas = false
       this.$emit('image-changed', this.drawing)
     },
+
+    resetPathStroke(){
+        this.canvas.getObjects().forEach(object => {
+          object.set('stroke', this.$vuetify.theme.dark ? 'white' : 'black')
+        })
+    },
+
+
     clearDrawing() {
       this.drawing = '';
       this.canvas.clear();
