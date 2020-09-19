@@ -1,5 +1,24 @@
 <template>
   <v-container fluid class="text-center" style="max-width: 700px">
+
+    <v-snackbar
+        v-model="snackbar"
+        timeout="2000"
+        color="success"
+        top
+    >
+      Message Printed! 😀
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-row id="wrapper" justify="center" align="center">
       <v-col cols="12" class="mb-0 pb-0">
         <v-textarea
@@ -58,6 +77,7 @@ export default {
       image: "",
       message: "",
       sending: false,
+      snackbar: false,
       formatting: {
         justify: 1,
         size: 2,
@@ -96,9 +116,13 @@ export default {
           image: this.image
         });
 
+
         if ('paper' in response.data) {
           this.$store.commit('setHasPaper', response.data['paper'])
         }
+
+        this.snackbar = true;
+
 
         this.message = "";
         this.image = "";
