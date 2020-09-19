@@ -124,7 +124,6 @@ export default {
         let canvasJSON = canvas.toJSON();
 
         if(this.currentStateIndex !== this.stateHistory.length -1){
-          console.log("Slice")
           this.stateHistory = this.stateHistory.slice(0, Math.max(this.currentStateIndex + 1, 0));
         }
 
