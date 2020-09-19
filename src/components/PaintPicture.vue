@@ -12,7 +12,7 @@
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-img  max-width="200" :src="drawing" :style="$vuetify.theme.dark ? '-webkit-filter: invert(1);\n'+
+          <v-img @click="initAndShowCanvas" max-width="200" :src="drawing" :style="$vuetify.theme.dark ? '-webkit-filter: invert(1);\n'+
 '   filter: invert(1);' : ''"/>
         </v-card>
       </v-row>
@@ -53,7 +53,7 @@ export default {
     initAndShowCanvas() {
       if(this.canvas === undefined){
         setTimeout(() => {
-          this.createCanvas()
+          this.canvas = this.createCanvas()
         }, 200)
       }
 
@@ -63,21 +63,29 @@ export default {
       this.canvas.clear();
     },
     createCanvas() {
-      this.canvas = new fabric.Canvas('canvas', {
+      let canvas = new fabric.Canvas('canvas', {
         isDrawingMode: true
       })
 
-      this.canvas.freeDrawingBrush.color = this.$vuetify.theme.dark ? 'white' : 'black';
-      this.canvas.freeDrawingBrush.width = 5;
+      canvas.freeDrawingBrush.color = this.$vuetify.theme.dark ? 'white' : 'black';
+      canvas.freeDrawingBrush.width = 5;
+
+      return canvas;
     },
     saveCanvasToImage(){
       this.canvas.discardActiveObject();
 
-      this.canvas.getObjects().forEach(object => {
+      //clone canvas - to prevent black lines when going back to edit
+      let canvasJSON = this.canvas.toJSON();
+      let canvasCopy = this.createCanvas().loadFromJSON(canvasJSON)
+
+
+      canvasCopy.getObjects().forEach(object => {
         object.set('stroke', 'black')
       })
-      this.canvas.requestRenderAll();
-      this.drawing = this.canvas.toDataURL('png')
+
+      canvasCopy.requestRenderAll();
+      this.drawing = canvasCopy.toDataURL('png')
       this.showCanvas = false
 
       this.$emit('image-changed', this.drawing)
