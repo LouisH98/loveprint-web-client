@@ -4,7 +4,9 @@
     <SignInComponent ref="signin" />
     <v-main style="max-height: 50vh">
       <transition name="fade">
-        <router-view/>
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
       </transition>
     </v-main>
 

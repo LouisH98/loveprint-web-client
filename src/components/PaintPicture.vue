@@ -8,10 +8,21 @@
               icon
               absolute
               style="right: 0; z-index: 2"
-              @click=clearDrawing
+              @click=clearCanvas
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
+
+          <v-btn
+              icon
+              absolute
+              style="left: 0; z-index: 2"
+              @click=downloadDrawing
+          >
+            <v-icon>mdi-download</v-icon>
+          </v-btn>
+
+
           <v-img @click="initAndShowCanvas" max-width="200" :src="drawing" :style="$vuetify.theme.dark ? '-webkit-filter: invert(1);\n'+
 '   filter: invert(1);' : ''"/>
         </v-card>
@@ -23,35 +34,56 @@
           Add Drawing
         </v-card-title>
         <v-divider/>
+
+        <v-card-actions>
+          <v-container class="py-0 my-0">
+            <v-row justify="center" align="center">
+              <v-slider
+                  thumb-label
+                  class="px-3"
+                  dense
+                  label="Pen Size"
+                  min="1"
+                  max="15"
+                  v-model="penSize"
+                  hide-details
+
+              />
+            </v-row>
+
+            <v-row justify="space-around" align="end">
+              <v-btn outlined @click="clearCanvas">Clear</v-btn>
+
+              <v-spacer/>
+
+              <v-btn icon :disabled="!canUndo" @click="undo">
+                <v-icon>mdi-undo</v-icon>
+              </v-btn>
+              <v-btn icon :disabled="!canRedo" @click="redo">
+                <v-icon>mdi-redo</v-icon>
+              </v-btn>
+            </v-row>
+
+
+
+          </v-container>
+        </v-card-actions>
+
+
         <v-row justify="center" align="center">
-          <canvas id="canvas" width="384" height="384"/>
+          <canvas style="border: 1px solid gray" class="rounded" id="canvas" width="384" height="384"/>
         </v-row>
-        <v-row justify="center" align="center" >
-          <v-slider
-              thumb-label
-              class="px-7"
-              dense
-              label="Pen Size"
-              min="1"
-              max="15"
-              v-model="penSize"
-
-          />
-        </v-row>
-        <v-card-actions style="overflow: hidden" class="mx-2">
-
-          <v-row justify="space-around" align="end">
-            <v-btn outlined @click="clearCanvas">Clear</v-btn>
-            <v-btn icon :disabled="!canUndo" @click="undo">
-              <v-icon>mdi-undo</v-icon>
-            </v-btn>
-            <v-btn icon :disabled="!canRedo" @click="redo">
-              <v-icon>mdi-redo</v-icon>
-            </v-btn>
-            <v-btn text @click="showCanvas = false">Cancel</v-btn>
-            <v-btn text @click="saveCanvasToImage" color="primary">Add</v-btn>
-          </v-row>
-
+        <v-card-actions style="overflow: hidden" class="py-0 my-0">
+          <v-container class="my-0 py-0">
+            <v-row justify="center">
+              <v-col>
+                <v-btn block text @click="showCanvas = false">Cancel</v-btn>
+              </v-col>
+              <v-col>
+                <v-btn block text @click="saveCanvasToImage" color="primary">Add</v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -73,7 +105,7 @@ export default {
     currentStateIndex: -1
   }),
   watch: {
-    penSize(){
+    penSize() {
       this.canvas.freeDrawingBrush.width = this.penSize;
     }
   },
@@ -98,12 +130,24 @@ export default {
 
       this.showCanvas = true;
     },
+
+    resetCanvasState() {
+      this.canvas.clear();
+      this.stateHistory = []
+      this.drawing = ''
+      this.currentStateIndex = -1;
+    },
+
     clearCanvas() {
       if (confirm("Are you sure you want to clear the canvas?")) {
-        this.canvas.clear();
-        this.stateHistory = []
-        this.currentStateIndex = -1;
+        this.resetCanvasState();
       }
+    },
+    downloadDrawing() {
+      const a = document.createElement("a");
+      a.href = this.drawing;
+      a.download = "LovePrint-drawing.png";
+      a.click();
     },
     createCanvas() {
       let canvas = new fabric.Canvas('canvas', {
@@ -123,30 +167,25 @@ export default {
         // save canvas state, increment current index number
         let canvasJSON = canvas.toJSON();
 
-        if(this.currentStateIndex !== this.stateHistory.length -1){
+        if (this.currentStateIndex !== this.stateHistory.length - 1) {
           this.stateHistory = this.stateHistory.slice(0, Math.max(this.currentStateIndex + 1, 0));
         }
-
         this.currentStateIndex++;
-        // remove all future changes... (+1 because math.max is exclusive of the last element... nice)
         this.stateHistory.push(canvasJSON);
-
-
       })
     },
 
     undo() {
-      if(this.currentStateIndex === 0) {
+      if (this.currentStateIndex === 0) {
         this.canvas.clear();
         this.currentStateIndex--;
-      }
-      else {
+      } else {
         this.canvas = this.canvas.loadFromJSON(this.stateHistory[--this.currentStateIndex])
       }
     },
 
     redo() {
-       this.canvas = this.canvas.loadFromJSON(this.stateHistory[++this.currentStateIndex])
+      this.canvas = this.canvas.loadFromJSON(this.stateHistory[++this.currentStateIndex])
     },
 
     saveCanvasToImage() {
@@ -170,17 +209,10 @@ export default {
       this.$emit('image-changed', this.drawing)
     },
 
-    resetPathStroke(){
-        this.canvas.getObjects().forEach(object => {
-          object.set('stroke', this.$vuetify.theme.dark ? 'white' : 'black')
-        })
-    },
-
-
-    clearDrawing() {
-      this.drawing = '';
-      this.canvas.clear();
-      this.$emit('image-changed', this.drawing)
+    resetPathStroke() {
+      this.canvas.getObjects().forEach(object => {
+        object.set('stroke', this.$vuetify.theme.dark ? 'white' : 'black')
+      })
     }
   }
 }

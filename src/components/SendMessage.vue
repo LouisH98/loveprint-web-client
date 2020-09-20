@@ -149,7 +149,7 @@ export default {
 
         this.message = "";
         this.image = "";
-        this.$refs.picture.clearDrawing();
+        this.$refs.picture.resetCanvasState();
       } catch (e) {
         if ('paper' in e.response.data) {
           this.$store.commit('setHasPaper', e.response.data['paper'])
