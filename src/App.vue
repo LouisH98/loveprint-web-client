@@ -1,8 +1,9 @@
 <template>
   <v-app>
-    <AppBar v-on:change-username="showModal"/>
-    <SignInComponent ref="signin" />
-    <v-main style="max-height: 50vh">
+    <update-information :update-info="updateInfo" :show-update-panel="updated" @close-dialog="updated = false"/>
+    <AppBar v-on:change-username="showModal" v-on:show-info="updated = true"/>
+    <SignInComponent ref="signin"/>
+    <v-main id="main" class="">
       <transition name="fade">
         <keep-alive>
           <router-view/>
@@ -10,16 +11,16 @@
       </transition>
     </v-main>
 
-    <v-bottom-navigation v-if="$vuetify.breakpoint.mobile"
-        color="primary"
-        app
-        grow
-        shift
-        class="pb-8"
-        style="height: 90px"
+    <v-bottom-navigation
+                         color="primary"
+                         app
+                         grow
+                         id="bottom-bar"
+                         shift
+                         height="90px"
     >
       <v-btn to="/" height="100%">
-        <span >Dashboard</span>
+        <span>Dashboard</span>
 
         <v-icon>mdi-home</v-icon>
       </v-btn>
@@ -43,18 +44,42 @@
 
 import AppBar from "@/components/AppBar";
 import SignInComponent from "@/components/SignInComponent";
+import UpdateInformation from "@/components/UpdateInformation";
+
+import updateMarkdown from '@/update-info.md'
+
+
+
+
 export default {
   name: 'App',
 
-  components: {SignInComponent, AppBar},
+  components: {UpdateInformation, SignInComponent, AppBar},
 
+  mounted() {
+    this.showUpdatePanel()
+
+  },
   data: () => ({
-    //
-  }),
+    updateInfo: {
+      version: '0.3.1',
+      markdown: updateMarkdown
+    },
+    updated: false
 
+  }),
   methods: {
     showModal() {
       this.$refs.signin.displayModal();
+    },
+    showUpdatePanel() {
+      //if the version in the localStorage is different to this version, show update and update localVersion
+      let isCurrentVersion = this.updateInfo.version === this.$store.state.lastSetVersion;
+
+      if(!isCurrentVersion){
+        this.updated = true;
+        this.$store.state.lastSetVersion = this.updateInfo.version;
+      }
     }
   }
 };
@@ -70,6 +95,13 @@ export default {
 
 body, html {
   background-color: #272727;
+  overflow: hidden;
+  height: 95vh;
+}
+
+#bottom-bar {
+  padding-bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 

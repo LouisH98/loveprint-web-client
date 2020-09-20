@@ -1,5 +1,6 @@
 <template>
   <v-app-bar
+      id="app-bar"
       app
   >
     <div class="d-flex align-center">
@@ -15,7 +16,10 @@
       <v-toolbar-title class="ms-1">LovePrint</v-toolbar-title>
     </div>
 
-    <v-spacer></v-spacer>
+    <v-spacer/>
+
+
+
     <div>
       <v-col cols="2">
         <v-row>
@@ -44,6 +48,11 @@
       <v-icon v-if="connected && !connecting" color="green">mdi-check-circle</v-icon>
       <v-icon v-else color="red">mdi-alert-circle</v-icon>
       <v-icon v-if="isPaperEmpty" color="red" class="blink">mdi-printer-alert</v-icon>
+
+      <v-btn icon @click="$emit('show-info')">
+        <v-icon>mdi-information-outline</v-icon>
+      </v-btn>
+
     </div>
   </v-app-bar>
 </template>
