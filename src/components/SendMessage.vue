@@ -86,6 +86,7 @@
 <script>
 import TextFormattingControls from "@/components/TextFormattingControls";
 import PaintPicture from "@/components/PaintPicture";
+import {addItemToHistory} from "@/utils";
 
 const axios = require('axios');
 
@@ -118,6 +119,17 @@ export default {
 
       return (isMessage || isImage)
     },
+    saveMessageToStore(){
+      const messageObj = {
+        message: this.message,
+        formatting: this.formatting,
+        image: this.image,
+        time: new Date()
+      }
+      addItemToHistory(messageObj);
+
+      this.$root.$emit('new-message', messageObj)
+    },
     sendMessageToServer: async function () {
       if (!this.isMessageContent()) return
 
@@ -129,9 +141,9 @@ export default {
 
       try {
         this.sending = true
-        console.log("Sending request to: ", this.$store.state.lovePrintAddress + '/api/print-text')
-        console.log("Formatting", this.formatting);
-        console.log(this.image)
+
+        this.saveMessageToStore();
+
         const response = await axios.post(this.$store.state.lovePrintAddress + '/api/print-text', {
           message: this.message,
           formatting: this.formatting,
@@ -145,6 +157,7 @@ export default {
         }
 
         this.successSnackbar = true;
+
 
 
         this.message = "";

@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    lovePrintAddress: 'https://lp-api.louisholdsworth.co.uk:2053',
+    lovePrintAddress: 'http://loveprint.local:8080',
     hasPaper: true,
     username: "",
     lastSetVersion: '0.0.0'
