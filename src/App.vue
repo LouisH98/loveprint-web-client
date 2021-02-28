@@ -3,40 +3,41 @@
     <update-information :update-info="updateInfo" :show-update-panel="updated" @close-dialog="updated = false"/>
     <AppBar v-on:change-username="showModal" v-on:show-info="updated = true"/>
     <SignInComponent ref="signin"/>
-    <v-main id="main" class="">
+    <v-main id="main" >
       <transition name="fade">
         <keep-alive>
           <router-view/>
         </keep-alive>
       </transition>
     </v-main>
+    <v-footer>
+      <v-bottom-navigation
+          color="primary"
+          app
+          grow
+          id="bottom-bar"
+          shift
+          height="90px"
+      >
+        <v-btn to="/" height="100%">
+          <span>Dashboard</span>
 
-    <v-bottom-navigation
-                         color="primary"
-                         app
-                         grow
-                         id="bottom-bar"
-                         shift
-                         height="90px"
-    >
-      <v-btn to="/" height="100%">
-        <span>Dashboard</span>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
 
-        <v-icon>mdi-home</v-icon>
-      </v-btn>
+        <v-btn to="History" height="100%">
+          <span>History</span>
 
-      <v-btn to="History" height="100%">
-        <span>History</span>
+          <v-icon>mdi-history</v-icon>
+        </v-btn>
 
-        <v-icon>mdi-history</v-icon>
-      </v-btn>
+<!--        <v-btn to="Settings" height="100%">-->
+<!--          <span>Settings</span>-->
 
-      <v-btn to="Settings" height="100%">
-        <span>Settings</span>
-
-        <v-icon>mdi-cog</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
+<!--          <v-icon>mdi-cog</v-icon>-->
+<!--        </v-btn>-->
+      </v-bottom-navigation>
+    </v-footer>
   </v-app>
 </template>
 
@@ -62,7 +63,7 @@ export default {
   },
   data: () => ({
     updateInfo: {
-      version: '0.3.1',
+      version: '0.4.0',
       markdown: updateMarkdown
     },
     updated: false

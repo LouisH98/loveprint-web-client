@@ -86,9 +86,7 @@
 <script>
 import TextFormattingControls from "@/components/TextFormattingControls";
 import PaintPicture from "@/components/PaintPicture";
-import {addItemToHistory} from "@/utils";
-
-const axios = require('axios');
+import {addItemToHistory, uuidv4, sendMessage} from "@/utils";
 
 export default {
 
@@ -109,7 +107,13 @@ export default {
       }
     }
   },
+  mounted(){
+    this.$root.$on('print-history-message', this.setMessageContents)
+  },
   methods: {
+    setMessageContents({message}){
+      this.message =  message;
+    },
     setImage(image){
       this.image = image;
     },
@@ -124,7 +128,8 @@ export default {
         message: this.message,
         formatting: this.formatting,
         image: this.image,
-        time: new Date()
+        time: new Date(),
+        id: uuidv4()
       }
       addItemToHistory(messageObj);
 
@@ -133,7 +138,7 @@ export default {
     sendMessageToServer: async function () {
       if (!this.isMessageContent()) return
 
-      if(this.message.split(" ").length > 25){
+      if(this.message.split(" ").length > 40){
         alert("Pls dont use all my paper...")
         this.message = "pls"
         return
@@ -144,7 +149,7 @@ export default {
 
         this.saveMessageToStore();
 
-        const response = await axios.post(this.$store.state.lovePrintAddress + '/api/print-text', {
+        const responseData = await sendMessage({
           message: this.message,
           formatting: this.formatting,
           username: this.$store.state.username,
@@ -152,24 +157,25 @@ export default {
         });
 
 
-        if ('paper' in response.data) {
-          this.$store.commit('setHasPaper', response.data['paper'])
+        if ('paper' in responseData) {
+          this.$store.commit('setHasPaper', responseData['paper'])
         }
 
         this.successSnackbar = true;
-
-
 
         this.message = "";
         this.image = "";
         this.$refs.picture.resetCanvasState();
       } catch (e) {
-        if ('paper' in e.response.data) {
+        if (e.response && e.response.data && 'paper' in e.response.data) {
           this.$store.commit('setHasPaper', e.response.data['paper'])
+          this.errorMessage = e.response.data.error
+          this.errorSnackbar = true;
+        } else {
+          this.errorMessage = "Error when sending message: " + e;
+          this.errorSnackbar = true;
         }
-
-        this.errorMessage = e.response.data.error
-        this.errorSnackbar = true;
+        console.log(e)
       } finally {
         this.sending = false;
       }

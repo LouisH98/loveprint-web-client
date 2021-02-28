@@ -28,14 +28,13 @@
         </v-card>
       </v-row>
     </v-container>
-    <v-dialog v-model="showCanvas" max-width="384">
+    <v-dialog v-model="showCanvas" max-width="400">
       <v-card class="overflow-hidden">
         <v-card-title>
           Add Drawing
         </v-card-title>
-        <v-divider/>
 
-        <v-card-actions>
+        <v-card-actions class="mb-2">
           <v-container class="py-0 my-0">
             <v-row justify="center" align="center">
               <v-slider
@@ -52,7 +51,7 @@
             </v-row>
 
             <v-row justify="space-around" align="end">
-              <v-btn outlined @click="clearCanvas">Clear</v-btn>
+              <v-btn  text @click="clearCanvas">Clear</v-btn>
 
               <v-spacer/>
 
@@ -69,11 +68,13 @@
           </v-container>
         </v-card-actions>
 
+          <v-divider/>
+          <v-row justify="center" class="my-1">
+            <canvas class="rounded" id="canvas" width="384" height="384"/>
+          </v-row>
+        <v-divider/>
 
-        <v-row justify="center" align="center">
-          <canvas style="border: 1px solid gray" class="rounded" id="canvas" width="384" height="384"/>
-        </v-row>
-        <v-card-actions style="overflow: hidden" class="py-0 my-0">
+        <v-card-actions style="overflow: hidden" class="">
           <v-container class="my-0 py-0">
             <v-row justify="center">
               <v-col>
@@ -104,6 +105,9 @@ export default {
     penSize: 5,
     currentStateIndex: -1
   }),
+  mounted(){
+    this.$root.$on('print-history-message', this.handleHistoryPrint)
+  },
   watch: {
     penSize() {
       this.canvas.freeDrawingBrush.width = this.penSize;
@@ -121,6 +125,9 @@ export default {
     }
   },
   methods: {
+    handleHistoryPrint({image}){
+      this.drawing = image;
+    },
     initAndShowCanvas() {
       if (this.canvas === undefined) {
         setTimeout(() => {
@@ -132,7 +139,10 @@ export default {
     },
 
     resetCanvasState() {
-      this.canvas.clear();
+      if(this.canvas){
+        this.canvas.clear();
+
+      }
       this.stateHistory = []
       this.drawing = ''
       this.currentStateIndex = -1;

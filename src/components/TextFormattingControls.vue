@@ -71,6 +71,9 @@ export default {
       deep: true
     }
   },
+  mounted(){
+    this.$root.$on('print-history-message', this.setFormattingFromMessage)
+  },
   data: function () {
     return {
       formatting: {
@@ -78,6 +81,11 @@ export default {
         size: 2,
         text_style: []
       }
+    }
+  },
+  methods: {
+    setFormattingFromMessage({formatting}) {
+      this.formatting = formatting;
     }
   }
 }
