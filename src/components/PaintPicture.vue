@@ -1,33 +1,9 @@
 <template>
   <div>
-    <v-container class="ma-0 pa-0">
       <v-row justify="center">
-        <v-btn v-if="drawing === ''" rounded @click="initAndShowCanvas">Add Drawing</v-btn>
-        <v-card v-else class="text-right">
-          <v-btn
-              icon
-              absolute
-              style="right: 0; z-index: 2"
-              @click=clearCanvas
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-
-          <v-btn
-              icon
-              absolute
-              style="left: 0; z-index: 2"
-              @click=downloadDrawing
-          >
-            <v-icon>mdi-download</v-icon>
-          </v-btn>
-
-
-          <v-img @click="initAndShowCanvas" max-width="200" :src="drawing" :style="$vuetify.theme.dark ? '-webkit-filter: invert(1);\n'+
-'   filter: invert(1);' : ''"/>
-        </v-card>
+        <v-btn rounded @click="initAndShowCanvas">Add Drawing</v-btn>
+        
       </v-row>
-    </v-container>
     <v-dialog v-model="showCanvas" max-width="400">
       <v-card class="overflow-hidden">
         <v-card-title>
@@ -35,7 +11,6 @@
         </v-card-title>
 
         <v-card-actions class="mb-2">
-          <v-container class="py-0 my-0">
             <v-row justify="center" align="center">
               <v-slider
                   thumb-label
@@ -65,7 +40,6 @@
 
 
 
-          </v-container>
         </v-card-actions>
 
           <v-divider/>
@@ -75,7 +49,6 @@
         <v-divider/>
 
         <v-card-actions style="overflow: hidden" class="">
-          <v-container class="my-0 py-0">
             <v-row justify="center">
               <v-col>
                 <v-btn block text @click="showCanvas = false">Cancel</v-btn>
@@ -84,7 +57,6 @@
                 <v-btn block text @click="saveCanvasToImage" color="primary">Add</v-btn>
               </v-col>
             </v-row>
-          </v-container>
         </v-card-actions>
       </v-card>
     </v-dialog>

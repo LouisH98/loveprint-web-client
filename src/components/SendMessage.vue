@@ -1,6 +1,5 @@
 <template>
   <v-container fluid class="text-center" style="max-width: 700px">
-
     <v-snackbar
         id="success-snackbar"
         v-model="successSnackbar"
@@ -54,8 +53,12 @@
         />
       </v-col>
 
-      <v-col cols="12" class="mt-2">
-        <PaintPicture ref="picture" v-on:image-changed="setImage"/>
+      <v-col cols="12" class="d-flex align-center justify-space-around">
+        <PaintPicture  ref="picture" v-on:image-changed="setImage"/>
+        <GenerateImage v-on:image-changed="setImage"/>
+      </v-col>
+      <v-col v-if="image">
+        <ImagePreview :image="image" @clear-image="clearImage" />
       </v-col>
 
       <v-col class="pa-0 ma-0">
@@ -86,12 +89,15 @@
 <script>
 import TextFormattingControls from "@/components/TextFormattingControls";
 import PaintPicture from "@/components/PaintPicture";
+import GenerateImage from "@/components/GenerateImage";
+
 import {addItemToHistory, uuidv4, sendMessage} from "@/utils";
+import ImagePreview from "./ImagePreview.vue";
 
 export default {
 
   name: "MainScreen",
-  components: {PaintPicture, TextFormattingControls},
+  components: { PaintPicture, TextFormattingControls, GenerateImage, ImagePreview },
   data: function () {
     return {
       image: "",
@@ -111,11 +117,15 @@ export default {
     this.$root.$on('print-history-message', this.setMessageContents)
   },
   methods: {
-    setMessageContents({message}){
+    setMessageContents({message, image}){
       this.message =  message;
+      this.image =  image;
     },
     setImage(image){
       this.image = image;
+    },
+    clearImage(){
+      this.image = "";
     },
     isMessageContent(){
       let isMessage = this.message.trim().length > 0;
